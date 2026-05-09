@@ -1,0 +1,26 @@
+{
+  "id": "msg_01TestEscYes",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestEscYes",
+      "name": "record_escalation_decision",
+      "input": {
+        "escalate": true,
+        "reasoning": "Customer mentions GDPR and threatens to contact a regulator. Legal exposure. must be handled by trust & safety team rather than an automated reply.",
+        "suggested_team": "trust_safety"
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 540,
+    "output_tokens": 88,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}

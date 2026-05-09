@@ -1,0 +1,26 @@
+{
+  "id": "msg_01TestDraftNoFaq",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestDraftNoFaq",
+      "name": "record_draft",
+      "input": {
+        "response": "Thanks for the report. I don't have enough detail to confirm the exact cause yet. could you share the error message you saw and the device/browser you were using? A teammate will follow up shortly with next steps.",
+        "citations": [],
+        "tone": "neutral"
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 380,
+    "output_tokens": 96,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}

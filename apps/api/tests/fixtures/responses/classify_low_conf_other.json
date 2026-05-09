@@ -1,0 +1,26 @@
+{
+  "id": "msg_01TestClassifyLow",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestClassifyLow",
+      "name": "record_classification",
+      "input": {
+        "category": "other",
+        "confidence": 0.42,
+        "rationale": "Ambiguous one-line message with no clear category signal. defer to human triage."
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 380,
+    "output_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}

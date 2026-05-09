@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.egg-info/
+dist/
+build/
+.tox/
+
+# uv
+.uv/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Local data
+*.sqlite
+*.db
+postgres-data/
+
+# Eval outputs. keep the canonical scorecard committed so the regression
+# gate has a baseline to compare against; ignore everything else.
+evals/results/*
+!evals/results/.gitkeep
+!evals/results/scorecard.json
+evals/scorecard.json
+!evals/scorecard.example.json
+
+# Modal
+.modal/
+modal-volume-cache/

@@ -1,0 +1,26 @@
+{
+  "id": "msg_01TestEscNo",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestEscNo",
+      "name": "record_escalation_decision",
+      "input": {
+        "escalate": false,
+        "reasoning": "Routine billing question with high classification confidence (0.96) and a clear FAQ-grounded answer. No money dispute, legal terms, or trust/safety signals.",
+        "suggested_team": "none"
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 510,
+    "output_tokens": 72,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}

@@ -1,0 +1,73 @@
+# Local dev / e2e test stack.
+# `docker compose up` boots Postgres-with-pgvector + the API.
+# Frontend runs separately with `pnpm dev` in apps/web, it's lighter outside Docker.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: inbox
+      POSTGRES_PASSWORD: inbox
+      POSTGRES_DB: inbox_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inbox -d inbox_agent"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    # One-shot container that runs alembic upgrade head and exits. The api
+    # service depends on it via condition: service_completed_successfully so
+    # migrations run exactly once per `compose up`, never on container restart.
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://inbox:inbox@postgres:5432/inbox_agent
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://inbox:inbox@postgres:5432/inbox_agent
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-test-key-not-used-in-e2e}
+      # Empty string means "use the SDK default (api.anthropic.com)".
+      # The e2e test sets this to a host-side mock server.
+      ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL:-}
+      VOYAGE_API_KEY: ${VOYAGE_API_KEY:-test-key-not-used-in-e2e}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://cloud.langfuse.com}
+      APP_ENV: ${APP_ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      CORS_ORIGINS: "http://localhost:3000"
+    # Allow the container to reach the host on Linux CI (Docker Desktop on
+    # macOS/Windows already resolves host.docker.internal automatically).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  postgres-data:

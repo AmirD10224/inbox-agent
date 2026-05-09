@@ -1,0 +1,26 @@
+{
+  "id": "msg_01TestClassify",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestClassify",
+      "name": "record_classification",
+      "input": {
+        "category": "billing",
+        "confidence": 0.96,
+        "rationale": "The user references a specific monthly charge and asks for an itemized invoice. unambiguous billing intent."
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 412,
+    "output_tokens": 78,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}

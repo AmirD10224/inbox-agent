@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  UV_VERSION: "0.5.4"
+
+jobs:
+  api:
+    name: API · lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      - name: Install deps
+        run: uv pip install --system -e ".[dev]"
+
+      - name: ruff format check
+        run: ruff format --check .
+
+      - name: ruff lint
+        run: ruff check .
+
+      - name: mypy strict
+        run: mypy src
+
+      - name: pytest (unit + integration)
+        env:
+          ANTHROPIC_API_KEY: test-key-not-real
+          VOYAGE_API_KEY: test-key-not-real
+          DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+        run: pytest tests/unit tests/integration -v
+
+      - name: Coverage gate
+        run: pytest tests/unit tests/integration --cov-fail-under=75 -q
+
+      - name: Docker build
+        run: docker build -t inbox-agent:ci .
+
+  web:
+    name: Web · lint · typecheck · build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - env:
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+        run: pnpm build

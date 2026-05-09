@@ -1,0 +1,27 @@
+{
+  "_comment": "Used by the repair-on-validation-error test. The router serves this on attempt 1 and classify_billing_high_conf on attempt 2.",
+  "id": "msg_01TestClassifyBad",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01TestClassifyBad",
+      "name": "record_classification",
+      "input": {
+        "category": "billing",
+        "confidence": 1.5,
+        "rationale": "Out-of-range confidence on purpose to exercise repair."
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 412,
+    "output_tokens": 64,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  }
+}
