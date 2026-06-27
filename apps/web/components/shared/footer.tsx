@@ -40,10 +40,7 @@ export function Footer() {
         </FooterCol>
 
         <FooterCol title="Maintainer">
-          <FooterLink href="https://github.com/AmirD10224" external>
-            Amir Dhibi
-          </FooterLink>
-          <FooterLink href="mailto:amir10.dhibi@gmail.com">Email</FooterLink>
+          <FooterItem>Amir Dhibi</FooterItem>
         </FooterCol>
       </div>
 
